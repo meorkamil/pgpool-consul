@@ -1,0 +1,18 @@
+consul:
+  addr: "http://localhost:8500"
+  services:
+    name: "pgpool"
+    addr: "localhost"
+    port: 9999
+    interval: "5s"
+    timeout: "2s"
+
+pgpool:
+  listen: "localhost"
+  pcppassfile: "~/home/postgres/.pcppass"
+  pcpport: 9898
+  pcpuser: "pgpool"
+  id: "0"
+
+global:
+  interval: 3

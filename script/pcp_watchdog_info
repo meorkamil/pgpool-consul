@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# This sample pcp_watchdog_info output for debugging and mock testing purpose.
+# Copy this file accordingly to $PATH directory 
+#
+echo "Watchdog Cluster Information"
+echo "Total Nodes              : 2"
+echo "Remote Nodes             : 1"
+echo "Member Remote Nodes      : 1"
+echo "Alive Remote Nodes       : 1"
+echo "Nodes required for quorum: 2"
+echo "Quorum state             : QUORUM EXIST"
+echo "Local node escalation    : YES"
+echo "Leader Node Name         : 192.168.1.1:9999 Linux pgpool2"
+echo "Leader Host Name         : 192.168.1.1"
+echo ""
+echo "Watchdog Node Information"
+echo "Node Name         : 192.168.1.1:9999 Linux pgpool1"
+echo "Host Name         : 192.168.1.1"
+echo "Delegate IP       : Not_Set"
+echo "Pgpool port       : 9999"
+echo "Watchdog port     : 9000"
+echo "Node priority     : 1"
+echo "Status            : 7"
+echo "Status Name       : STANDBY"
+echo "Membership Status : MEMBER"
+echo ""
