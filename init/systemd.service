@@ -1,0 +1,12 @@
+[Unit]
+Description=pgpool-consul service
+Wants=pgpool.service
+
+[Service]
+User=postgres
+Group=postgres
+ExecStart=/var/lib/pgsql/pgpool-consul --config /var/lib/pgsql/pgpool-consul/config.yml
+ExecStop=kill -15 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
