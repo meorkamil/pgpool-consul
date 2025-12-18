@@ -35,23 +35,30 @@ func (c *core) Run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	for {
-		// Create a channel for communication between goroutines
-		pgpoolChan := make(chan string, 1)
-		pgpool := pgpool.NewPgPool(*c.config)
+	// Create a channel for communication between goroutines
+	pgpoolChan := make(chan string, 1)
+	pgpool := pgpool.NewPgPool(*c.config)
 
-		// Create consul client, TODO: remove it to diff goroutine
-		cnsl, err := consul.NewConsul(*c.config)
-		if err != nil {
-			slog.Error(fmt.Sprintf("Consul client: %s", err))
+	// Create consul client, TODO: remove it to diff goroutine
+	cnsl, err := consul.NewConsul(*c.config)
+	if err != nil {
+		slog.Error(fmt.Sprintf("Consul client: %s", err))
+	}
+
+	// Start goroutine for shutdown
+	go c.handleShutdown(signalChan, cancel)
+
+	// Start goroutine for pgpool
+	go func() {
+		for {
+			pgpool.Run(pgpoolChan)
+
+			// Keep as a long runnign process
+			time.Sleep(time.Duration(c.config.Global.Interval) * time.Second)
 		}
+	}()
 
-		// Start goroutine for pgpool
-		go pgpool.Run(pgpoolChan)
-
-		// Start goroutine for shutdown
-		go c.handleShutdown(signalChan, cancel)
-
+	for {
 		select {
 		// Handle the pgpool status received from the channel
 		case pgpoolStat := <-pgpoolChan:
@@ -73,8 +80,5 @@ func (c *core) Run() error {
 
 			return nil
 		}
-
-		// Keep as a long runnign process
-		time.Sleep(time.Duration(c.config.Global.Interval) * time.Second)
 	}
 }
